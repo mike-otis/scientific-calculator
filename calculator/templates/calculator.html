@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scientific Calculator</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f2f2f2;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .calculator {
+            background: white;
+            width: 350px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px #aaa;
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 120px;
+            padding: 12px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            background: #333;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #555;
+        }
+
+        .result {
+            font-size: 25px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="calculator">
+
+    <h1>Scientific Calculator</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <input
+            type="number"
+            step="any"
+            name="number"
+            placeholder="Enter a number"
+            required
+        >
+
+        <br>
+
+        <button name="operation" value="square">
+            x²
+        </button>
+
+        <button name="operation" value="sqrt">
+            √x
+        </button>
+
+        <button name="operation" value="sin">
+            sin
+        </button>
+
+        <button name="operation" value="cos">
+            cos
+        </button>
+
+        <button name="operation" value="tan">
+            tan
+        </button>
+
+        <button name="operation" value="log">
+            log
+        </button>
+
+    </form>
+
+    {% if result is not None %}
+        <div class="result">
+            Result: {{ result }}
+        </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
