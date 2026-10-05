@@ -6,47 +6,72 @@
 
     <style>
         body {
-            font-family: Arial;
+            font-family: Arial, sans-serif;
             background: #f2f2f2;
             text-align: center;
-            padding-top: 50px;
+            padding-top: 40px;
         }
 
         .calculator {
-            background: white;
+            background: #222;
             width: 350px;
             margin: auto;
-            padding: 25px;
+            padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 0 15px #aaa;
         }
 
-        input {
+        #display {
             width: 90%;
-            padding: 12px;
-            font-size: 20px;
+            height: 60px;
             margin-bottom: 15px;
+            font-size: 28px;
+            text-align: right;
+            padding: 5px 10px;
+            border-radius: 8px;
+            border: none;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
         }
 
         button {
-            width: 120px;
-            padding: 12px;
-            margin: 5px;
+            height: 55px;
+            font-size: 20px;
             border: none;
             border-radius: 8px;
-            background: #333;
-            color: white;
             cursor: pointer;
         }
 
         button:hover {
-            background: #555;
+            opacity: 0.8;
         }
 
-        .result {
-            font-size: 25px;
-            margin-top: 20px;
-            font-weight: bold;
+        .number {
+            background: #444;
+            color: white;
+        }
+
+        .operator {
+            background: #666;
+            color: white;
+        }
+
+        .scientific {
+            background: #555;
+            color: white;
+        }
+
+        .clear {
+            background: #b33;
+            color: white;
+        }
+
+        .equals {
+            background: #2878c8;
+            color: white;
         }
     </style>
 </head>
@@ -55,54 +80,164 @@
 
 <div class="calculator">
 
-    <h1>Scientific Calculator</h1>
+    <h2 style="color:white;">Scientific Calculator</h2>
 
-    <form method="POST">
-        {% csrf_token %}
+    <input type="text" id="display" value="0" readonly>
 
-        <input
-            type="number"
-            step="any"
-            name="number"
-            placeholder="Enter a number"
-            required
-        >
+    <div class="buttons">
 
-        <br>
+        <!-- Numbers -->
+        <button class="number" onclick="addNumber('7')">7</button>
+        <button class="number" onclick="addNumber('8')">8</button>
+        <button class="number" onclick="addNumber('9')">9</button>
+        <button class="operator" onclick="addNumber('/')">÷</button>
 
-        <button name="operation" value="square">
-            x²
-        </button>
+        <button class="number" onclick="addNumber('4')">4</button>
+        <button class="number" onclick="addNumber('5')">5</button>
+        <button class="number" onclick="addNumber('6')">6</button>
+        <button class="operator" onclick="addNumber('*')">×</button>
 
-        <button name="operation" value="sqrt">
-            √x
-        </button>
+        <button class="number" onclick="addNumber('1')">1</button>
+        <button class="number" onclick="addNumber('2')">2</button>
+        <button class="number" onclick="addNumber('3')">3</button>
+        <button class="operator" onclick="addNumber('-')">−</button>
 
-        <button name="operation" value="sin">
-            sin
-        </button>
+        <button class="number" onclick="addNumber('0')">0</button>
+        <button class="number" onclick="addNumber('.')">.</button>
+        <button class="clear" onclick="clearDisplay()">C</button>
+        <button class="operator" onclick="addNumber('+')">+</button>
 
-        <button name="operation" value="cos">
-            cos
-        </button>
+        <!-- Scientific functions -->
+        <button class="scientific" onclick="square()">x²</button>
+        <button class="scientific" onclick="squareRoot()">√</button>
+        <button class="scientific" onclick="sin()">sin</button>
+        <button class="scientific" onclick="cos()">cos</button>
 
-        <button name="operation" value="tan">
-            tan
-        </button>
+        <button class="scientific" onclick="tan()">tan</button>
+        <button class="scientific" onclick="log()">log</button>
+        <button class="scientific" onclick="addNumber('(')">(</button>
+        <button class="scientific" onclick="addNumber(')')">)</button>
 
-        <button name="operation" value="log">
-            log
-        </button>
+        <button class="scientific" onclick="addNumber('Math.PI')">π</button>
 
-    </form>
+        <button class="equals" onclick="calculate()">=</button>
 
-    {% if result is not None %}
-        <div class="result">
-            Result: {{ result }}
-        </div>
-    {% endif %}
+    </div>
 
 </div>
 
+
+<script>
+
+    let display = document.getElementById("display");
+
+    function addNumber(value) {
+
+        if (display.value === "0") {
+            display.value = value;
+        } else {
+            display.value += value;
+        }
+
+    }
+
+
+    function clearDisplay() {
+        display.value = "0";
+    }
+
+
+    function calculate() {
+
+        try {
+
+            let expression = display.value;
+
+            expression = expression.replace(/Math.PI/g, Math.PI);
+
+            display.value = eval(expression);
+
+        } catch (error) {
+
+            display.value = "Error";
+
+        }
+
+    }
+
+
+    function square() {
+
+        try {
+            let number = parseFloat(display.value);
+            display.value = number * number;
+        } catch {
+            display.value = "Error";
+        }
+
+    }
+
+
+    function squareRoot() {
+
+        try {
+
+            let number = parseFloat(display.value);
+
+            if (number < 0) {
+                display.value = "Error";
+            } else {
+                display.value = Math.sqrt(number);
+            }
+
+        } catch {
+            display.value = "Error";
+        }
+
+    }
+
+
+    function sin() {
+
+        let number = parseFloat(display.value);
+
+        display.value = Math.sin(number * Math.PI / 180);
+
+    }
+
+
+    function cos() {
+
+        let number = parseFloat(display.value);
+
+        display.value = Math.cos(number * Math.PI / 180);
+
+    }
+
+
+    function tan() {
+
+        let number = parseFloat(display.value);
+
+        display.value = Math.tan(number * Math.PI / 180);
+
+    }
+
+
+    function log() {
+
+        let number = parseFloat(display.value);
+
+        if (number <= 0) {
+            display.value = "Error";
+        } else {
+            display.value = Math.log10(number);
+        }
+
+    }
+
+</script>
+
 </body>
 </html>
+```
